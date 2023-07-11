@@ -13,50 +13,80 @@ export const EditarUsuario = (props) => {
   const [editar, setEditar] = useState(false)
 
 
-  const getDadosUsuario = () => {
-    axios
-      .get(
-        `${BASE_URL}/${props.id}`,
+  const getDadosUsuario = async () => {
+
+    try {
+
+      const resp = await axios.get(`${BASE_URL}/${props.id}`,
         {
           headers: {
             Authorization: AUTH_TOKEN,
           },
         }
       )
-      .then((res) => {
-        setUsuario(res.data);
-        setEmail(res.data.email);
-        setName(res.data.name);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
+
+
+      setUsuario(resp.data);
+      setEmail(resp.data.email);
+      setName(resp.data.name);
+
+
+
+      
+    } catch (error) {
+
+      console.log(error)
+      
+    }
+
+
+    
+    
   };
 
   useEffect(() => {
     getDadosUsuario();
   }, []);
 
-  const editaUsuario = () => {
+
+const editaUsuario = async () => {
+
+  try {
+
     const body = {
-        name,
-        email
-      };
-      axios
-        .put(
-          `${BASE_URL}/${usuario.id}`,
-          body,
-          {
-            headers: {
-              Authorization: AUTH_TOKEN
-            }
+      name,
+      email
+    };
+     await axios.put(`${BASE_URL}/${usuario.id}`,
+        body,
+        {
+          headers: {
+            Authorization: AUTH_TOKEN
           }
-        )
-        .then(() => {
-          getDadosUsuario();
+        }
+      )
+
+
+      getDadosUsuario();
           setEditar(!editar)
-        });
+
+  } catch (error) {
+
+    console.log(error);
+
+
   }
+
+
+
+
+
+}
+
+
+
+
+  
 
   const deletarUsuario = () => {
     axios
